@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Metaphy LLC — Mutual NDA (Secure Intake)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{ --accent:#4f46e5; }
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: #f9fafb; }
+    .shadow-soft { box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
+    .required:after { content: " *"; color: #e11d48; }
+    .input { border: 2px solid #d1d5db; background: #fff; border-radius: 12px; padding: 10px 12px; outline: none; transition: box-shadow .2s, border-color .2s; width: 100%; }
+    .input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(79,70,229,.15); }
+    .section-title{ font-size:1.125rem; font-weight:600; margin-top:.5rem }
+    .divider{ height:1px; background: #e5e7eb; margin: .75rem 0 1rem }
+    .btn{ border-radius:12px; padding:.6rem 1rem; font-weight:600 }
+    .btn-primary{ background:var(--accent); color:white }
+    .btn-success{ background:#059669; color:white }
+    .btn-neutral{ background:#374151; color:white }
+    .link{ color:var(--accent); text-decoration:underline }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+  <div class="max-w-6xl mx-auto p-4 md:p-8">
+    <div class="flex justify-center mb-4">
+      <img src="https://img1.wsimg.com/isteam/ip/bbaabe63-6ba9-4c65-a2ee-d538211cda2a/Gronk%20Metaphy%20logo2b.png/:/rs=w:240,cg:true" alt="Metaphy LLC" class="w-24 h-24 object-contain rounded-md bg-white shadow">
+    </div>
+    <header class="mb-6 text-center">
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Metaphy LLC — Mutual NDA (Secure Intake)</h1>
+      <p class="text-gray-600 mt-2 max-w-3xl mx-auto">Complete the form below to request execution of a Mutual Non‑Disclosure Agreement with Metaphy LLC. After you submit, a PDF copy is generated. Final execution is subject to Metaphy LLC review and approval.</p>
+      <div class="mt-3 text-sm text-gray-700 bg-amber-50 border border-amber-200 p-3 rounded-lg max-w-3xl mx-auto">
+        <strong>Notice.</strong> This form facilitates document intake and e‑signature. Electronic signatures are intended to be valid under ESIGN and UETA. Do not include export‑controlled or classified information.
+      </div>
+    </header>
+
+    <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <section class="lg:col-span-2">
+        <form id="ndaForm" class="bg-white p-5 md:p-6 rounded-2xl shadow-soft space-y-5">
+          <h2 class="section-title">Counterparty Information</h2>
+          <div class="divider"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium required">Legal Entity Name</label>
+              <input name="cp_name" class="input mt-1" required autocomplete="organization" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium required">Entity Type</label>
+              <input name="cp_type" class="input mt-1" list="entityTypes" required autocomplete="organization-title" />
+              <datalist id="entityTypes">
+                <option value="Corporation"></option><option value="LLC"></option><option value="Partnership"></option><option value="Sole Proprietorship"></option><option value="Nonprofit"></option><option value="Other"></option>
+              </datalist>
+            </div>
+            <div>
+              <label class="block text-sm font-medium required">State/Province</label>
+              <input name="cp_state" class="input mt-1" list="usStates" required autocomplete="address-level1" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium required">Country</label>
+              <input name="cp_country" class="input mt-1" list="countries" required autocomplete="country-name" />
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium required">Registered/Principal Address</label>
+              <input name="cp_address" class="input mt-1" required autocomplete="street-address" />
+              <div class="mt-2 flex gap-2 items-center">
+                <button type="button" id="geoBtn" class="btn btn-neutral">Use My Location</button>
+                <span class="text-xs text-gray-500">Optional. Will request permission and auto-fill city/state (uses OpenStreetMap). If it times out, try again in ~60s.</span>
+              </div>
+            </div>
+          </div>
+
+          <h2 class="section-title">Primary Contact</h2>
+          <div class="divider"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium required">Contact Name</label>
+              <input name="cp_contact" class="input mt-1" required autocomplete="name" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Title</label>
+              <input name="cp_title" class="input mt-1" autocomplete="organization-title" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium required">Email</label>
+              <input type="email" name="cp_email" class="input mt-1" required autocomplete="email" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Phone</label>
+              <input name="cp_phone" class="input mt-1" autocomplete="tel" />
+            </div>
+          </div>
+
+          <h2 class="section-title">Agreement Settings</h2>
+          <div class="divider"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium required">Effective Date</label>
+              <input type="date" name="effective_date" class="input mt-1" required autocomplete="bday" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium required">Governing Law</label>
+              <input name="gov_law" value="California" class="input mt-1" required />
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium required">Venue (County, State)</label>
+              <input name="venue" value="Riverside County, CA" class="input mt-1" required />
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium required">Purpose of Discussions</label>
+              <input name="purpose" placeholder="e.g., evaluation, development, licensing relating to QEGG/DRGFC/LWIS/SPTS/2S1C/HMSS/QUAD" class="input mt-1" required />
+            </div>
+          </div>
+
+          <h2 class="section-title">Counterparty Signature</h2>
+          <div class="divider"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium required">Signer Name</label>
+              <input name="signer_name" class="input mt-1" required autocomplete="name" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium required">Signer Title</label>
+              <input name="signer_title" class="input mt-1" required autocomplete="organization-title" />
+            </div>
+          </div>
+          <div class="mt-2">
+            <label class="block text-sm font-medium required mb-1">Draw Signature</label>
+            <div class="bg-white rounded-xl border-2 border-gray-300">
+              <canvas id="sigPad" class="w-full h-48"></canvas>
+            </div>
+            <div class="flex gap-3 mt-2">
+              <button type="button" id="clearSig" class="btn btn-neutral">Clear</button>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <label class="inline-flex items-center">
+              <input type="checkbox" name="ack" required class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+              <span class="ml-2 text-sm">I am authorized to sign for the Counterparty and agree to electronic signatures under ESIGN/UETA.</span>
+            </label>
+          </div>
+
+          <div class="mt-5 flex flex-col md:flex-row gap-3">
+            <button type="button" id="downloadPdf" class="btn btn-primary">Download PDF</button>
+            <button type="button" id="submitEmail" class="btn btn-success">Submit for Approval</button>
+          </div>
+          <p class="text-xs text-gray-500 mt-2">By clicking “Submit for Approval,” your information and signature are packaged into a PDF and emailed to Metaphy LLC for review. You will receive a fully executed copy upon approval with account setup instructions.</p>
+        </form>
+      </section>
+
+      <aside class="space-y-4">
+        <div class="bg-white p-5 rounded-2xl shadow-soft">
+          <h3 class="text-lg font-semibold">NDA Terms (Summary)</h3>
+          <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1 mt-2">
+            <li>Mutual confidentiality; use solely for stated Purpose.</li>
+            <li>No license or reverse engineering; equitable relief available.</li>
+            <li>Permitted disclosures to advisors/financiers bound by similar obligations.</li>
+            <li>Return/Destruction on request; trade secrets protected indefinitely.</li>
+            <li>Assignment limited; merger/acquisition permissive with assumption.</li>
+            <li>Governing law/venue as specified.</li>
+          </ul>
+          <p class="text-xs text-gray-500 mt-3">Full text appears inside the generated PDF.</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-soft">
+          <h3 class="text-lg font-semibold">After Approval</h3>
+          <p class="text-sm text-gray-700 mt-1">Upon Metaphy LLC approval, the counterparty receives an email with the executed NDA and these onboarding steps:</p>
+          <ol class="list-decimal pl-5 text-sm text-gray-700 space-y-1 mt-2">
+            <li>Create an account at <a href="https://www.metaphysicsandcomputing.com" class="link">MetaphysicsandComputing.com</a>.</li>
+            <li>Review the access terms prohibiting copying, distribution, or reverse engineering of proprietary content.</li>
+            <li><strong>You will be granted access to proprietary information upon approval of NDA.</strong></li>
+          </ol>
+        </div>
+      </aside>
+    </main>
+
+    <section class="mt-8 bg-white p-5 rounded-2xl shadow-soft">
+      <h2 class="text-xl font-semibold mb-2">Full NDA Text (auto-filled in PDF)</h2>
+      <textarea id="ndaBody" class="input h-64 text-sm">
+MUTUAL NON‑DISCLOSURE AGREEMENT
+This Mutual Non‑Disclosure Agreement (“Agreement”) is entered into as of [[EFFECTIVE_DATE]] by and between Metaphy LLC, a California limited liability company (“Company”), and [[CP_NAME]], a [[CP_TYPE]] organized under the laws of [[CP_STATE]], [[CP_COUNTRY]] (“Counterparty”).
+
+1. Purpose. The Parties anticipate discussions concerning evaluation, development, licensing, partnering, or investment relating to Company technologies including QEGG, DRGFC, LWIS, SPTS, 2S1C, HMSS, and QUAD (“Purpose”).
+
+2. Confidential Information. “Confidential Information” means all non‑public information disclosed by either Party, including business, technical, financial, and transaction terms, whether oral or written, and all notes and copies made by Recipient. Exclusions apply if Recipient can prove information is: (a) public through no fault; (b) known without restriction; (c) independently developed; or (d) rightfully received from a third party without duty of confidence.
+
+3. Use and Care. Recipient shall use Confidential Information solely for the Purpose, restrict disclosure to its representatives with a need to know who are bound by obligations at least as protective, and protect with reasonable care.
+
+4. No License; No Reverse Engineering. No rights are granted by implication or otherwise. Recipient shall not analyze, decompile, or reverse engineer any samples, software, algorithms, or prototypes.
+
+5. Compelled Disclosure. If legally required to disclose, Recipient shall, where lawful, give prompt notice and cooperate to seek protective treatment.
+
+6. Term; Return/Destruction. This Agreement remains in effect for five (5) years from the Effective Date; trade secrets remain protected as long as they qualify. On request, Recipient shall return or destroy Confidential Information and certify destruction, excluding routine backups.
+
+7. Remedies. Breach may cause irreparable harm; Discloser may seek injunctive relief in addition to other remedies without posting bond.
+
+8. Compliance. The Parties will comply with applicable export and sanctions laws.
+
+9. Assignment. Neither Party may assign without the other’s consent, except to a successor in merger, acquisition, or sale of substantially all assets with assumption of obligations.
+
+10. Governing Law; Venue. This Agreement is governed by the laws of [[GOV_LAW]] (excluding conflicts‑of‑law rules). Exclusive venue lies in the courts located in [[VENUE]].
+
+11. Entire Agreement. This is the entire agreement regarding its subject and may be amended only in a signed writing.
+
+SIGNATURES:
+Metaphy LLC — By: Randell Logan Smith (Founder) — Date: [[EFFECTIVE_DATE]]
+Counterparty — By: [[SIGNER_NAME]], Title: [[SIGNER_TITLE]] — Date: [[EFFECTIVE_DATE]]
+      </textarea>
+    </section>
+
+    <footer class="text-xs text-gray-500 mt-8 mb-6 text-center">
+      <p>© <span id="year"></span> Metaphy LLC. Proprietary. This page collects information to generate an NDA for review and approval. It does not grant access to proprietary materials until an executed agreement is confirmed.</p>
+    </footer>
+  </div>
+
+  <datalist id="usStates">
+    <option value="Alabama"></option><option value="Alaska"></option><option value="Arizona"></option>
+    <option value="Arkansas"></option><option value="California"></option><option value="Colorado"></option>
+    <option value="Connecticut"></option><option value="Delaware"></option><option value="Florida"></option>
+    <option value="Georgia"></option><option value="Hawaii"></option><option value="Idaho"></option>
+    <option value="Illinois"></option><option value="Indiana"></option><option value="Iowa"></option>
+    <option value="Kansas"></option><option value="Kentucky"></option><option value="Louisiana"></option>
+    <option value="Maine"></option><option value="Maryland"></option><option value="Massachusetts"></option>
+    <option value="Michigan"></option><option value="Minnesota"></option><option value="Mississippi"></option>
+    <option value="Missouri"></option><option value="Montana"></option><option value="Nebraska"></option>
+    <option value="Nevada"></option><option value="New Hampshire"></option><option value="New Jersey"></option>
+    <option value="New Mexico"></option><option value="New York"></option><option value="North Carolina"></option>
+    <option value="North Dakota"></option><option value="Ohio"></option><option value="Oklahoma"></option>
+    <option value="Oregon"></option><option value="Pennsylvania"></option><option value="Rhode Island"></option>
+    <option value="South Carolina"></option><option value="South Dakota"></option><option value="Tennessee"></option>
+    <option value="Texas"></option><option value="Utah"></option><option value="Vermont"></option>
+    <option value="Virginia"></option><option value="Washington"></option><option value="West Virginia"></option>
+    <option value="Wisconsin"></option><option value="Wyoming"></option>
+  </datalist>
+  <datalist id="countries">
+    <option value="United States"></option><option value="Canada"></option><option value="United Kingdom"></option>
+    <option value="Germany"></option><option value="France"></option><option value="Australia"></option>
+    <option value="Japan"></option><option value="South Korea"></option><option value="India"></option>
+    <option value="Mexico"></option><option value="Brazil"></option><option value="Other"></option>
+  </datalist>
+
+<script>
+  const GEO_PROVIDER = 'nominatim';
+  const logoUrl = "https://img1.wsimg.com/isteam/ip/bbaabe63-6ba9-4c65-a2ee-d538211cda2a/Gronk%20Metaphy%20logo2b.png/:/rs=w:240,cg:true";
+
+  const canvas = document.getElementById('sigPad');
+  const signaturePad = new SignaturePad(canvas, { backgroundColor: 'rgba(255,255,255,0)', penColor: '#111827' });
+  function resizeCanvas() {
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = 200 * ratio;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(ratio, ratio);
+    ctx.fillStyle = "#fff"; ctx.fillRect(0,0,canvas.width,canvas.height);
+    signaturePad.clear();
+  }
+  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('load', () => {
+    resizeCanvas();
+    document.getElementById('year').textContent = new Date().getFullYear();
+  });
+  document.getElementById('clearSig').addEventListener('click', () => signaturePad.clear());
+
+  const geoBtn = document.getElementById('geoBtn');
+  geoBtn.addEventListener('click', async () => {
+    const now = Date.now();
+    const last = Number(localStorage.getItem('geo_last_ts') || 0);
+    if (now - last < 60000) {
+      const cached = localStorage.getItem('geo_cached_addr');
+      if (cached) {
+        try {
+          const { state, country, address } = JSON.parse(cached);
+          document.querySelector("input[name='cp_state']").value = state || '';
+          document.querySelector("input[name='cp_country']").value = country || '';
+          document.querySelector("input[name='cp_address']").value = address || '';
+          alert('Location autofilled from recent cache.');
+          return;
+        } catch(_) {}
+      }
+    }
+    if (!navigator.geolocation) { alert("Geolocation not supported."); return; }
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      try {
+        const { latitude, longitude } = pos.coords;
+        let result = null;
+        if (GEO_PROVIDER === 'nominatim') {
+          const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`;
+          const resp = await fetch(url, { headers:{ "Accept":"application/json"} });
+          if (!resp.ok) throw new Error('Reverse geocode failed');
+          const data = await resp.json();
+          const state = data.address.state || data.address.state_district || "";
+          const country = data.address.country || "";
+          const road = data.address.road || "";
+          const house = data.address.house_number || "";
+          const city = data.address.city || data.address.town || data.address.village || data.address.county || "";
+          const addr = [house && (house+" "+road) || road, city, state].filter(Boolean).join(", ");
+          result = { state, country, address: addr };
+        }
+        if (result) {
+          document.querySelector("input[name='cp_state']").value = result.state || '';
+          document.querySelector("input[name='cp_country']").value = result.country || '';
+          if (result.address) document.querySelector("input[name='cp_address']").value = result.address;
+          localStorage.setItem('geo_cached_addr', JSON.stringify(result));
+          localStorage.setItem('geo_last_ts', String(Date.now()));
+        } else {
+          alert('Could not auto-fill location. Please enter manually.');
+        }
+      } catch(e) {
+        alert('Location lookup throttled or failed. Please try again later or enter manually.');
+      }
+    }, () => alert("Permission denied for location."), { enableHighAccuracy:true, timeout:8000 });
+  });
+
+  function serializeForm(form) { const data = new FormData(form); const obj = {}; data.forEach((v,k)=>obj[k]=v); return obj; }
+  function sanitizeFilename(s) { return (s||"COUNTERPARTY").replace(/[^a-z0-9]+/gi, "_").replace(/^_+|_+$/g, "").toUpperCase(); }
+  function fetchLogoDataUrl(url) {
+    return fetch(url).then(r=>r.blob()).then(b=>new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(b);})).catch(()=>null);
+  }
+  function normalizeUnicode(s){ return s.replace(/[“”]/g,'"').replace(/[‘’]/g,"'").replace(/[\u2010-\u2015]/g,"-"); }
+  function scrubBodyTemplate(templateText){
+    let t = templateText.replace(/^\s*MU[Tt][Uu][Tt][Uu][Aa][Ll].*DISCLOSURE AGREEMENT\s*/i, "");
+    t = t.split(/\nSIGNATURES\s*:/i)[0];
+    return normalizeUnicode(t).trim();
+  }
+  function fillPlaceholders(tpl, data){
+    const map = {
+      EFFECTIVE_DATE: data.effective_date,
+      CP_NAME: data.cp_name,
+      CP_TYPE: data.cp_type,
+      CP_STATE: data.cp_state,
+      CP_COUNTRY: data.cp_country,
+      GOV_LAW: data.gov_law,
+      VENUE: data.venue,
+      SIGNER_NAME: data.signer_name,
+      SIGNER_TITLE: data.signer_title
+    };
+    return Object.entries(map).reduce((acc,[k,v])=>acc.replaceAll(`[[${k}]]`, v || ''), tpl);
+  }
+
+  async function makePdf(formData, bodyTemplate, sigDataUrl) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 72;
+    const maxWidth = pageW - margin*2;
+    const lineHF = 1.25;
+
+    let y = margin;
+    const logoDataUrl = await fetchLogoDataUrl(logoUrl);
+    if (logoDataUrl) {
+      const w=80,h=80;
+      doc.addImage(logoDataUrl, 'PNG', (pageW-w)/2, y, w, h);
+      y += h + 18;
+    } else {
+      y += 10;
+    }
+    doc.setFont('helvetica','bold').setFontSize(13);
+    // Title centered within text column, not full page:
+    doc.text('MUTUAL NON-DISCLOSURE AGREEMENT', margin + (maxWidth/2), y, { align:'center' });
+    y += 22;
+
+    doc.setFont('helvetica','normal').setFontSize(11);
+    const parties = `Between Metaphy LLC ("Company") and ${formData.cp_name} (${formData.cp_type}), Effective ${formData.effective_date}.`;
+    const partiesLines = doc.splitTextToSize(parties, maxWidth);
+    for (const line of partiesLines) {
+      if (y > pageH - margin) { doc.addPage(); y = margin; }
+      doc.text(line, margin, y, { maxWidth, lineHeightFactor: lineHF });
+      y += 14;
+    }
+
+    let body = bodyTemplate;
+    body = fillPlaceholders(body, formData);
+    body = scrubBodyTemplate(body);
+    const bodyLines = doc.splitTextToSize(body, maxWidth);
+    for (const line of bodyLines) {
+      if (y > pageH - margin) { doc.addPage(); y = margin; }  // <-- requested change
+      doc.text(line, margin, y, { maxWidth, lineHeightFactor: lineHF });
+      y += 14;
+    }
+
+    if (doc.internal.getCurrentPageInfo().pageNumber === 1) {
+      doc.addPage(); y = margin;
+    }
+
+    doc.setFont('helvetica','bold').setFontSize(12);
+    doc.text('Signatures', margin, y); y += 18;
+    doc.setFont('helvetica','normal').setFontSize(11);
+
+    const colGap = 36;
+    const colWidth = (pageW - margin*2 - colGap)/2;
+    const leftX = margin;
+    const rightX = margin + colWidth + colGap;
+    let yL = y, yR = y;
+
+    doc.text('Metaphy LLC', leftX, yL); yL += 16;
+    doc.text('By: _______________________________', leftX, yL); yL += 14;
+    doc.text('Name: Randell Logan Smith, Founder', leftX, yL); yL += 14;
+    doc.text('Date: ____________________________', leftX, yL);
+
+    doc.text(formData.cp_name, rightX, yR); yR += 16;
+    if (sigDataUrl) { doc.addImage(sigDataUrl, 'PNG', rightX, yR - 8, 180, 56); yR += 60; }
+    else { doc.text('Signature: ________________________', rightX, yR); yR += 14; }
+    doc.text(`By: ${formData.signer_name}, ${formData.signer_title}`, rightX, yR); yR += 14;
+    doc.text(`Date: ${formData.effective_date}`, rightX, yR); yR += 14;
+
+    const metaY = Math.max(yL, yR) + 24;
+    doc.setFontSize(10);
+    const meta = `Governing Law: ${formData.gov_law} | Venue: ${formData.venue} | Purpose: ${formData.purpose}`;
+    doc.text(meta, margin, metaY, { maxWidth });
+
+    const filename = `Metaphy_Mutual_NDA_${sanitizeFilename(formData.cp_name)}_${Date.now()}.pdf`;
+    const blob = doc.output('blob');
+    return new File([blob], filename, { type: 'application/pdf' });
+  }
+
+  async function sendEmails(pdfFile, formData) {
+    const serviceId = "YOUR_EMAILJS_SERVICE_ID";
+    const submitTemplate = "nda_submit_to_metaphy";
+    const ccTemplate = "nda_copy_to_counterparty";
+    if (serviceId.startsWith("YOUR_")) {
+      const mailto = `mailto:logan@metaphysicsandcomputing.com?subject=NDA Submission: ${encodeURIComponent(formData.cp_name)}&body=${encodeURIComponent(
+        `Please see attached generated PDF for NDA approval.\n\nCounterparty: ${formData.cp_name}\nContact: ${formData.cp_contact || ""} (${formData.cp_email})\nEffective: ${formData.effective_date}\nGoverning Law/Venue: ${formData.gov_law} / ${formData.venue}\nPurpose: ${formData.purpose}\n\n(If your email client does not attach the file automatically, attach the downloaded PDF.)`
+      )}`;
+      window.open(mailto, '_blank'); alert("PDF generated. Email opened to send to Metaphy. Attach the PDF if your client didn't do it automatically.");
+      return;
+    }
+    const reader = new FileReader();
+    const base64 = await new Promise((resolve) => { reader.onload = () => resolve(reader.result.split(",")[1]); reader.readAsDataURL(pdfFile); });
+    await emailjs.send(serviceId, submitTemplate, { cp_name: formData.cp_name, cp_email: formData.cp_email, cp_contact: formData.cp_contact, effective_date: formData.effective_date, gov_law: formData.gov_law, venue: formData.venue, purpose: formData.purpose, pdf_filename: pdfFile.name, pdf_base64: base64 });
+    await emailjs.send(serviceId, ccTemplate, { to_email: formData.cp_email, message: `Thank you for submitting the Mutual NDA to Metaphy LLC. Your request is pending review. You will receive a fully executed copy upon approval with account setup instructions for MetaphysicsandComputing.com.` });
+    alert("Submitted for approval. You will receive an acknowledgment by email.");
+  }
+
+  document.getElementById('downloadPdf').addEventListener('click', async () => {
+    const form = document.getElementById('ndaForm');
+    if (!form.reportValidity()) return;
+    const data = serializeForm(form);
+    const bodyTpl = document.getElementById('ndaBody').value;
+    const file = await makePdf(data, bodyTpl, signaturePad.isEmpty()? null : signaturePad.toDataURL());
+    const url = URL.createObjectURL(file); const a = document.createElement('a'); a.href = url; a.download = file.name; a.click(); URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('submitEmail').addEventListener('click', async () => {
+    const form = document.getElementById('ndaForm');
+    if (!form.reportValidity()) return;
+    if (signaturePad.isEmpty()) { alert("Please draw a signature before submitting."); return; }
+    const data = serializeForm(form);
+    const bodyTpl = document.getElementById('ndaBody').value;
+    const file = await makePdf(data, bodyTpl, signaturePad.toDataURL());
+    await sendEmails(file, data);
+    const url = URL.createObjectURL(file); const a = document.createElement('a'); a.href = url; a.download = file.name; a.click(); URL.revokeObjectURL(url);
+  });
+</script>
+</body>
+</html>
